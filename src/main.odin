@@ -1,25 +1,23 @@
 package main
 
-import rl "vendor:raylib"
 import "./physics"
 import "./render"
+import rl "vendor:raylib"
 
 main :: proc() {
-  // create particle
-  particle : physics.Particle = physics.CreateParticle(400, 300, 10, 1, 0, physics.Gravity)
+	particle: physics.Particle = physics.CreateParticle(400, 300, 10, 1, 0, physics.World.gravity)
 
-	rl.InitWindow(800, 600, "tumble")
+	rl.InitWindow(i32(physics.World.dimentions[0]), i32(physics.World.dimentions[1]), "tumble")
 	defer rl.CloseWindow()
 
-	rl.SetTargetFPS(60)
+	rl.SetTargetFPS(144)
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
 		defer rl.EndDrawing()
-    rl.ClearBackground(rl.GRAY)
-		
-    render.RenderParticleLoop(&particle)
+		rl.ClearBackground(rl.BLACK)
+
+		render.Step(&particle)
+		rl.DrawFPS(10, 10)
 	}
 }
-
-

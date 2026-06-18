@@ -1,25 +1,33 @@
 package physics
 
-Gravity: f32 : 9.8
-
-Particle :: struct {
-	position:     [2]f32,
-	radius:       f32,
-	mass:         f32,
-	velocity:     [2]f32,
-	acceleration: [2]f32,
+@(private)
+CalculateVelocity :: proc (acceleration : [2]f32, dt : f32) -> [2]f32 {
+  return {
+    acceleration[0] * dt, 
+    acceleration[1] * dt
+  } 
 }
 
-CreateParticle :: proc(x, y, radius, mass, ax, ay: f32) -> Particle {
-	return Particle{{x, y}, radius, mass, {0, 0}, {ax, ay}}
+@(private)
+CalculatePosition :: proc (velocity : [2]f32, dt : f32) -> [2]f32 {
+  return {
+    velocity[0] * dt,
+    velocity[1] * dt
+  }
 }
 
-CalculateParticleVelocity :: proc(particle: ^Particle, dt: f32) {
-	particle.velocity[0] += particle.acceleration[0] * dt
-	particle.velocity[1] += particle.acceleration[1] * dt
+@(private)
+IsCollidingWithXPlane :: proc (y : f32) -> bool {
+  if y <= 0 || y >= World.dimentions[1]{
+    return true
+  }
+  return false
 }
 
-CalculateParticlePosition :: proc(particle: ^Particle, dt: f32) {
-	particle.position[0] += particle.velocity[0] * dt
-	particle.position[1] += particle.velocity[1] * dt
+@(private)
+IsCollidingWithYPlane :: proc (x : f32) -> bool {
+  if x <= 0 || x >= World.dimentions[0] {
+    return true
+  }
+  return false
 }
