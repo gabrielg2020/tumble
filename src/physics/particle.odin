@@ -26,11 +26,23 @@ CalculateParticlePosition :: proc(particle: ^Particle, dt: f32) {
 }
 
 CheckParticleCollisions :: proc(particle: ^Particle) {
-  if IsCollidingWithXPlane(particle.position[1] + particle.radius) {
-    particle.velocity[1] *= -1
+  if IsCollidingWithTopWall(particle.position[1] - particle.radius) {
+    particle.position[1] = particle.radius
+    particle.velocity[1] *= -World.restitution
   }
 
-  if IsCollidingWithYPlane(particle.position[0] + particle.radius) {
-    particle.velocity[0] *= -1
+  if IsCollidingWithBottomWall(particle.position[1] + particle.radius) {
+    particle.position[1] = World.dimentions[1] - particle.radius
+    particle.velocity[1] *= -World.restitution
+  }
+
+  if IsCollidingWithRightWall(particle.position[0] + particle.radius) {
+    particle.position[0] = World.dimentions[0] - particle.radius
+    particle.velocity[0] *= -World.restitution
+  }
+
+  if IsCollidingWithLeftWall(particle.position[0] - particle.radius) {
+    particle.position[0] = particle.radius
+    particle.velocity[0] *= -World.restitution
   }
 }
