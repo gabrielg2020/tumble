@@ -11,17 +11,6 @@ main :: proc() {
 	particles: [dynamic]ParticleInstance
 	defer delete(particles)
 
-	// temporary test of array rendering
-	append(
-		&particles,
-		ParticleInstance {
-			particle = physics.CreateParticle(300, 200, 10, 1, 0, physics.World.gravity),
-		},
-		ParticleInstance {
-			particle = physics.CreateParticle(500, 300, 10, 1, 0, physics.World.gravity),
-		},
-	)
-
 	rl.InitWindow(i32(physics.World.dimentions[0]), i32(physics.World.dimentions[1]), "tumble")
 	defer rl.CloseWindow()
 
@@ -37,6 +26,10 @@ main :: proc() {
 		for &instance in particles {
 			render.Step(&instance.particle, &instance.trail)
 		}
+
+    if launcher.aiming {
+      render.DrawPreview(control.PreviewParticle(&launcher))
+    }
 
 		rl.DrawFPS(10, 10)
 

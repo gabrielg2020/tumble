@@ -18,7 +18,14 @@ Release :: proc(launcher: ^Launcher) -> (physics.Particle, bool) {
 	if !launcher.aiming {
 		return {}, false
 	}
+
+  particle := PreviewParticle(launcher)
 	launcher.aiming = false
+
+	return particle, true
+}
+
+PreviewParticle :: proc(launcher: ^Launcher) -> physics.Particle {
 	mouse_position := rl.GetMousePosition()
 
 	particle := physics.CreateParticle(
@@ -34,5 +41,6 @@ Release :: proc(launcher: ^Launcher) -> (physics.Particle, bool) {
 		(launcher.launch_position.x - mouse_position.x) * launcher.launch_scale,
 		(launcher.launch_position.y - mouse_position.y) * launcher.launch_scale,
 	}
-	return particle, true
+
+  return particle
 }
