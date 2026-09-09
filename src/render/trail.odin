@@ -10,8 +10,7 @@ Trail :: struct {
 	count:  int,
 }
 
-@(private)
-trailPush :: proc(trail: ^Trail, p: [2]f32) {
+RecordTrail :: proc(trail: ^Trail, p: [2]f32) {
 	trail.points[trail.head] = p
 	trail.head = (trail.head + 1) % maxTrailLength
 	if trail.count < maxTrailLength {
@@ -25,6 +24,6 @@ drawTrail :: proc(trail: ^Trail, radius: f32) {
 		idx: int = (trail.head - trail.count + i + maxTrailLength) % maxTrailLength
 		alpha: f32 = f32(i + 1) / f32(trail.count)
 		col: rl.Color = rl.Fade(rl.GRAY, alpha)
-		rl.DrawCircleV(rl.Vector2{trail.points[idx].x, trail.points[idx].y}, radius * alpha, col)
+		rl.DrawCircleV(WorldToScreen(trail.points[idx]), radius * PixelsPerMetre * alpha, col)
 	}
 }

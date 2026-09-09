@@ -1,15 +1,23 @@
 package physics
 
 Particle :: struct {
-	position:     [2]f32, // 0: x, 1: y
-	radius:       f32,
-	mass:         f32,
-	velocity:     [2]f32, // 0 vx, 1: vy
-	acceleration: [2]f32, // 0 ax, 1: ay
+	position:     [2]f32, // Metres (x, y).
+	radius:       f32, // Metres.
+	mass:         f32, // Kilograms.
+	velocity:     [2]f32, // Metres per second (x, y).
+	acceleration: [2]f32, // Metres per second squared (x, y).
 }
+
+FixedDT :: f32(1.0 / 120.0) // Seconds; all physics dt arguments use seconds.
 
 CreateParticle :: proc(x, y, radius, mass, ax, ay: f32) -> Particle {
 	return Particle{{x, y}, radius, mass, {0, 0}, {ax, ay}}
+}
+
+IntegrateParticle :: proc(particle: ^Particle, world: WorldConfig, dt: f32) {
+	particle.acceleration = {0, world.gravity}
+	CalculateParticleVelocity(particle, dt)
+	CalculateParticlePosition(particle, dt)
 }
 
 CalculateParticleVelocity :: proc(particle: ^Particle, dt: f32) {
@@ -24,24 +32,24 @@ CalculateParticlePosition :: proc(particle: ^Particle, dt: f32) {
 	particle.position[1] += calculatedPosition[1]
 }
 
-CheckParticleCollisions :: proc(particle: ^Particle) {
-  if IsCollidingWithTopWall(particle.position[1] - particle.radius) {
-    particle.position[1] = particle.radius
-    particle.velocity[1] *= -World.restitution
-  }
+CheckParticleCollisions :: proc(particle: ^Particle, world: WorldConfig) {
+	if IsCollidingWithTopWall(particle.position.y - particle.radius) {
+		particle.position[1] = particle.radius
+		particle.velocity[1] *= -world.restitution
+	}
 
-  if IsCollidingWithBottomWall(particle.position[1] + particle.radius) {
-    particle.position[1] = World.dimentions[1] - particle.radius
-    particle.velocity[1] *= -World.restitution
-  }
+	if IsCollidingWithBottomWall(particle.position.y + particle.radius, world.dimensions.y) {
+		particle.position[1] = world.dimensions[1] - particle.radius
+		particle.velocity[1] *= -world.restitution
+	}
 
-  if IsCollidingWithRightWall(particle.position[0] + particle.radius) {
-    particle.position[0] = World.dimentions[0] - particle.radius
-    particle.velocity[0] *= -World.restitution
-  }
+	if IsCollidingWithRightWall(particle.position.x + particle.radius, world.dimensions.x) {
+		particle.position[0] = world.dimensions[0] - particle.radius
+		particle.velocity[0] *= -world.restitution
+	}
 
-  if IsCollidingWithLeftWall(particle.position[0] - particle.radius) {
-    particle.position[0] = particle.radius
-    particle.velocity[0] *= -World.restitution
-  }
+	if IsCollidingWithLeftWall(particle.position.x - particle.radius) {
+		particle.position[0] = particle.radius
+		particle.velocity[0] *= -world.restitution
+	}
 }

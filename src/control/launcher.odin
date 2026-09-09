@@ -1,46 +1,43 @@
 package control
 
 import "../physics"
-import rl "vendor:raylib"
 
 Launcher :: struct {
 	aiming:          bool,
-	launch_position: rl.Vector2,
+	launch_position: [2]f32,
 	launch_scale:    f32,
 }
 
-BeginAim :: proc(launcher: ^Launcher) {
+BeginAim :: proc(launcher: ^Launcher, position: [2]f32) {
 	launcher.aiming = true
-	launcher.launch_position = rl.GetMousePosition()
+	launcher.launch_position = position
 }
 
-Release :: proc(launcher: ^Launcher) -> (physics.Particle, bool) {
+Release :: proc(launcher: ^Launcher, position: [2]f32) -> (physics.Particle, bool) {
 	if !launcher.aiming {
 		return {}, false
 	}
 
-  particle := PreviewParticle(launcher)
+	particle := PreviewParticle(launcher, position)
 	launcher.aiming = false
 
 	return particle, true
 }
 
-PreviewParticle :: proc(launcher: ^Launcher) -> physics.Particle {
-	mouse_position := rl.GetMousePosition()
-
+PreviewParticle :: proc(launcher: ^Launcher, position: [2]f32) -> physics.Particle {
 	particle := physics.CreateParticle(
 		launcher.launch_position.x,
 		launcher.launch_position.y,
-		10,
+		0.1,
 		1,
 		0,
-		physics.World.gravity,
+		0,
 	)
 
 	particle.velocity = {
-		(launcher.launch_position.x - mouse_position.x) * launcher.launch_scale,
-		(launcher.launch_position.y - mouse_position.y) * launcher.launch_scale,
+		(launcher.launch_position.x - position.x) * launcher.launch_scale,
+		(launcher.launch_position.y - position.y) * launcher.launch_scale,
 	}
 
-  return particle
+	return particle
 }

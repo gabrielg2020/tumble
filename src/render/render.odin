@@ -1,19 +1,9 @@
 package render
 
 import "../physics"
-import rl "vendor:raylib"
 
-
-Step :: proc(particle: ^physics.Particle, trail: ^Trail) {
-  trailPush(trail, particle.position)
+Draw :: proc(particle: ^physics.Particle, trail: ^Trail) {
   drawTrail(trail, particle.radius)
-	RenderParticle(particle)
-  // TODO: support multiple particles
-  // DrawStats(particle)
-
-	dt: f32 = rl.GetFrameTime()
-	physics.CalculateParticleVelocity(particle, dt)
-	physics.CalculateParticlePosition(particle, dt)
-	physics.CheckParticleCollisions(particle)
+  RenderParticle(particle)
 }
 

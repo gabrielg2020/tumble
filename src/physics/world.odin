@@ -1,9 +1,7 @@
 package physics
 
-WorldState :: struct {
-	dimentions:  [2]f32, // 0: length,  1: height
-	gravity:     f32,
-	restitution: f32, // 1.0 = full energy conservation
+WorldConfig :: struct {
+	dimensions:  [2]f32, // Width and height in metres.
+	gravity:     f32, // Metres per second squared; positive Y points down.
+	restitution: f32, // Dimensionless; 1.0 is a perfectly elastic bounce.
 }
-
-World :: WorldState{{800, 600}, 9.8, 0.8}

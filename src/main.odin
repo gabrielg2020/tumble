@@ -6,12 +6,22 @@ import "./render"
 import rl "vendor:raylib"
 
 main :: proc() {
-	launcher := control.Launcher{launch_scale = 3}
+	world := physics.WorldConfig {
+		dimensions  = {8, 6},
+		gravity     = 9.8,
+		restitution = 0.8,
+	}
+
+	clock: SimulationClock
+	launcher := control.Launcher {
+		launch_scale = 3,
+	}
 
 	particles: [dynamic]ParticleInstance
 	defer delete(particles)
 
-	rl.InitWindow(i32(physics.World.dimentions[0]), i32(physics.World.dimentions[1]), "tumble")
+	window_size := render.WorldToScreen(world.dimensions)
+	rl.InitWindow(i32(window_size.x), i32(window_size.y), "tumble")
 	defer rl.CloseWindow()
 
 	rl.SetTargetFPS(144)
@@ -19,17 +29,20 @@ main :: proc() {
 	for !rl.WindowShouldClose() {
 		UpdateControls(&launcher, &particles)
 
+		AdvanceSimulation(&clock, particles[:], world, rl.GetFrameTime())
+
 		rl.BeginDrawing()
 		defer rl.EndDrawing()
 		rl.ClearBackground(rl.BLACK)
 
 		for &instance in particles {
-			render.Step(&instance.particle, &instance.trail)
+			render.Draw(&instance.particle, &instance.trail)
 		}
 
-    if launcher.aiming {
-      render.DrawPreview(control.PreviewParticle(&launcher))
-    }
+		if launcher.aiming {
+			mouse_position := render.ScreenToWorld(rl.GetMousePosition())
+			render.DrawPreview(control.PreviewParticle(&launcher, mouse_position), world)
+		}
 
 		rl.DrawFPS(10, 10)
 
