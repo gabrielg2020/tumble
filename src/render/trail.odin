@@ -2,28 +2,33 @@ package render
 
 import rl "vendor:raylib"
 
-maxTrailLength: int : 100
+@(private = "file")
+MAX_TRAIL_LENGTH :: 100
 
 Trail :: struct {
-	points: [maxTrailLength][2]f32,
+	points: [MAX_TRAIL_LENGTH][2]f32,
 	head:   int,
 	count:  int,
 }
 
-RecordTrail :: proc(trail: ^Trail, p: [2]f32) {
-	trail.points[trail.head] = p
-	trail.head = (trail.head + 1) % maxTrailLength
-	if trail.count < maxTrailLength {
+record_trail :: proc(trail: ^Trail, position: [2]f32) {
+	trail.points[trail.head] = position
+	trail.head = (trail.head + 1) % MAX_TRAIL_LENGTH
+	if trail.count < MAX_TRAIL_LENGTH {
 		trail.count += 1
 	}
 }
 
 @(private)
-drawTrail :: proc(trail: ^Trail, radius: f32) {
+draw_trail :: proc(trail: ^Trail, radius: f32) {
 	for i in 0 ..< trail.count {
-		idx: int = (trail.head - trail.count + i + maxTrailLength) % maxTrailLength
-		alpha: f32 = f32(i + 1) / f32(trail.count)
-		col: rl.Color = rl.Fade(rl.GRAY, alpha)
-		rl.DrawCircleV(WorldToScreen(trail.points[idx]), radius * PixelsPerMetre * alpha, col)
+		index := (trail.head - trail.count + i + MAX_TRAIL_LENGTH) % MAX_TRAIL_LENGTH
+		alpha := f32(i + 1) / f32(trail.count)
+		colour := rl.Fade(rl.GRAY, alpha)
+		rl.DrawCircleV(
+			world_to_screen(trail.points[index]),
+			radius * PIXELS_PER_METRE * alpha,
+			colour,
+		)
 	}
 }

@@ -20,32 +20,32 @@ main :: proc() {
 	particles: [dynamic]ParticleInstance
 	defer delete(particles)
 
-	window_size := render.WorldToScreen(world.dimensions)
+	window_size := render.world_to_screen(world.dimensions)
 	rl.InitWindow(i32(window_size.x), i32(window_size.y), "tumble")
 	defer rl.CloseWindow()
 
 	rl.SetTargetFPS(144)
 
 	for !rl.WindowShouldClose() {
-		UpdateControls(&launcher, &particles)
+		update_controls(&launcher, &particles)
 
-		AdvanceSimulation(&clock, particles[:], world, rl.GetFrameTime())
+		advance_simulation(&clock, particles[:], world, rl.GetFrameTime())
 
 		rl.BeginDrawing()
 		defer rl.EndDrawing()
 		rl.ClearBackground(rl.BLACK)
 
 		for &instance in particles {
-			render.Draw(&instance.particle, &instance.trail)
+			render.draw(&instance.particle, &instance.trail)
 		}
 
 		if launcher.aiming {
-			mouse_position := render.ScreenToWorld(rl.GetMousePosition())
-			render.DrawPreview(control.PreviewParticle(&launcher, mouse_position), world)
+			mouse_position := render.screen_to_world(rl.GetMousePosition())
+			render.draw_preview(control.preview_particle(&launcher, mouse_position), world)
 		}
 
 		rl.DrawFPS(10, 10)
 
-		free_all(context.temp_allocator) // reclaim the memory allcoated to stats page
+		free_all(context.temp_allocator)
 	}
 }

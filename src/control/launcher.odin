@@ -8,36 +8,27 @@ Launcher :: struct {
 	launch_scale:    f32,
 }
 
-BeginAim :: proc(launcher: ^Launcher, position: [2]f32) {
+begin_aim :: proc(launcher: ^Launcher, position: [2]f32) {
 	launcher.aiming = true
 	launcher.launch_position = position
 }
 
-Release :: proc(launcher: ^Launcher, position: [2]f32) -> (physics.Particle, bool) {
+release :: proc(launcher: ^Launcher, position: [2]f32) -> (physics.Particle, bool) {
 	if !launcher.aiming {
 		return {}, false
 	}
 
-	particle := PreviewParticle(launcher, position)
+	particle := preview_particle(launcher, position)
 	launcher.aiming = false
 
 	return particle, true
 }
 
-PreviewParticle :: proc(launcher: ^Launcher, position: [2]f32) -> physics.Particle {
-	particle := physics.CreateParticle(
-		launcher.launch_position.x,
-		launcher.launch_position.y,
-		0.1,
-		1,
-		0,
-		0,
-	)
-
-	particle.velocity = {
-		(launcher.launch_position.x - position.x) * launcher.launch_scale,
-		(launcher.launch_position.y - position.y) * launcher.launch_scale,
+preview_particle :: proc(launcher: ^Launcher, position: [2]f32) -> physics.Particle {
+	return physics.Particle {
+		position = launcher.launch_position,
+		radius   = 0.1,
+		mass     = 1,
+		velocity = (launcher.launch_position - position) * launcher.launch_scale,
 	}
-
-	return particle
 }

@@ -11,7 +11,21 @@ odin build src -out:tumble
 ./tumble
 ```
 
-CI runs this build on Ubuntu with Odin `dev-2026-06` for pushes and pull requests.
+CI runs checking, linting, physics tests and the build on Ubuntu with Odin
+`dev-2026-06` for pushes and pull requests.
+
+## Checks and Tests
+
+```sh
+odin check src
+odin check src -vet -vet-style -vet-semicolon -vet-tabs
+odin test src/physics -vet -vet-style -vet-semicolon -vet-tabs -out:/tmp/tumble-physics-tests
+```
+
+Linting uses Odin's built-in checks for unused variables/imports, shadowing,
+trailing commas, unnecessary semicolons and tab indentation. Physics tests use
+`core:testing` and run without a window. They cover integration, numerical
+convergence, gravity changes and wall collision response.
 
 ## Pre-commit Hook
 
@@ -28,7 +42,7 @@ leaves the existing executable untouched. Odin must be on PATH, including when
 committing from an editor.
 
 The executable is built for your local platform; the current development target
-is Linux. CI only verifies the build and does not commit its output.
+is Linux. CI verifies the code and does not commit its output.
 
 ---
 
