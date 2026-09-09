@@ -6,7 +6,7 @@ import rl "vendor:raylib"
 
 @(private)
 RenderParticle :: proc(particle: ^physics.Particle) {
-	rl.DrawCircleV(rl.Vector2{particle.position.x, particle.position.y}, particle.radius, rl.RED)
+	rl.DrawCircleV(WorldToScreen(particle.position), particle.radius * PixelsPerMetre, rl.RED)
 }
 
 @(private)

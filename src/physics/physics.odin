@@ -20,7 +20,7 @@ IsCollidingWithTopWall :: proc(y: f32) -> bool {
 
 @(private)
 IsCollidingWithBottomWall :: proc(y: f32) -> bool {
-	if y >= World.dimentions[1] {
+	if y >= World.dimensions[1] {
 		return true
 	}
 	return false
@@ -28,7 +28,7 @@ IsCollidingWithBottomWall :: proc(y: f32) -> bool {
 
 @(private)
 IsCollidingWithRightWall :: proc(x: f32) -> bool {
-	if x >= World.dimentions[0] {
+	if x >= World.dimensions[0] {
 		return true
 	}
 	return false

@@ -6,7 +6,7 @@ import rl "vendor:raylib"
 DrawPreview :: proc(particle: physics.Particle) {
 	predicted := particle
 
-  steps_per_dot :: 100
+  steps_per_dot :: 12
 	dot_count :: 3
 
 	for _ in 0 ..< dot_count {
@@ -14,13 +14,13 @@ DrawPreview :: proc(particle: physics.Particle) {
       physics.IntergrateParticle(&predicted, physics.FixedDT)
 
 			if predicted.position.x - predicted.radius <= 0 ||
-			   predicted.position.x + predicted.radius >= physics.World.dimentions[0] ||
+			   predicted.position.x + predicted.radius >= physics.World.dimensions[0] ||
 			   predicted.position.y - predicted.radius <= 0 ||
-			   predicted.position.y + predicted.radius >= physics.World.dimentions[1] {
+			   predicted.position.y + predicted.radius >= physics.World.dimensions[1] {
 				return
 			}
 		}
 
-		rl.DrawCircleV(rl.Vector2{predicted.position.x, predicted.position.y}, 3, rl.WHITE)
+		rl.DrawCircleV(WorldToScreen(predicted.position), 3, rl.WHITE)
 	}
 }

@@ -1,14 +1,14 @@
 package physics
 
 Particle :: struct {
-	position:     [2]f32, // 0: x, 1: y
-	radius:       f32,
-	mass:         f32,
-	velocity:     [2]f32, // 0 vx, 1: vy
-	acceleration: [2]f32, // 0 ax, 1: ay
+	position:     [2]f32, // Metres (x, y).
+	radius:       f32, // Metres.
+	mass:         f32, // Kilograms.
+	velocity:     [2]f32, // Metres per second (x, y).
+	acceleration: [2]f32, // Metres per second squared (x, y).
 }
 
-FixedDT :: f32(1.0 / 120.0)
+FixedDT :: f32(1.0 / 120.0) // Seconds; all physics dt arguments use seconds.
 
 CreateParticle :: proc(x, y, radius, mass, ax, ay: f32) -> Particle {
 	return Particle{{x, y}, radius, mass, {0, 0}, {ax, ay}}
@@ -38,12 +38,12 @@ CheckParticleCollisions :: proc(particle: ^Particle) {
   }
 
   if IsCollidingWithBottomWall(particle.position[1] + particle.radius) {
-    particle.position[1] = World.dimentions[1] - particle.radius
+    particle.position[1] = World.dimensions[1] - particle.radius
     particle.velocity[1] *= -World.restitution
   }
 
   if IsCollidingWithRightWall(particle.position[0] + particle.radius) {
-    particle.position[0] = World.dimentions[0] - particle.radius
+    particle.position[0] = World.dimensions[0] - particle.radius
     particle.velocity[0] *= -World.restitution
   }
 
