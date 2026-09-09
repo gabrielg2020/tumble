@@ -12,6 +12,11 @@ CreateParticle :: proc(x, y, radius, mass, ax, ay: f32) -> Particle {
 	return Particle{{x, y}, radius, mass, {0, 0}, {ax, ay}}
 }
 
+IntergrateParticle :: proc(particle: ^Particle, dt: f32) {
+  CalculateParticleVelocity(particle, dt)
+  CalculateParticlePosition(particle, dt)
+}
+
 CalculateParticleVelocity :: proc(particle: ^Particle, dt: f32) {
 	calculatedVelocity: [2]f32 = CalculateVelocity(particle.acceleration, dt)
 	particle.velocity[0] += calculatedVelocity[0]

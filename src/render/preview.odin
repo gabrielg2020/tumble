@@ -12,8 +12,7 @@ DrawPreview :: proc(particle: physics.Particle) {
 
 	for _ in 0 ..< dot_count {
 		for _ in 0 ..< steps_per_dot {
-			physics.CalculateParticleVelocity(&predicted, step)
-			physics.CalculateParticlePosition(&predicted, step)
+      physics.IntergrateParticle(&predicted, step)
 
 			if predicted.position.x - predicted.radius <= 0 ||
 			   predicted.position.x + predicted.radius >= physics.World.dimentions[0] ||

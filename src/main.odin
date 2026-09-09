@@ -19,12 +19,14 @@ main :: proc() {
 	for !rl.WindowShouldClose() {
 		UpdateControls(&launcher, &particles)
 
+    UpdateSimulation(particles[:], rl.GetFrameTime())
+
 		rl.BeginDrawing()
 		defer rl.EndDrawing()
 		rl.ClearBackground(rl.BLACK)
 
 		for &instance in particles {
-			render.Step(&instance.particle, &instance.trail)
+			render.Draw(&instance.particle, &instance.trail)
 		}
 
     if launcher.aiming {
