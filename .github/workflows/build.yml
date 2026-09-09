@@ -1,4 +1,4 @@
-name: Build
+name: CI
 
 on:
   push:
@@ -26,5 +26,11 @@ jobs:
           )
           sudo apt-get "${apt_options[@]}" update
           sudo apt-get "${apt_options[@]}" install -y libgl1-mesa-dev libx11-dev
+      - name: Check Tumble
+        run: odin check src
+      - name: Lint Tumble
+        run: odin check src -vet -vet-style -vet-semicolon -vet-tabs
+      - name: Test physics
+        run: odin test src/physics -vet -vet-style -vet-semicolon -vet-tabs -out:"$RUNNER_TEMP/tumble-physics-tests"
       - name: Build Tumble
         run: odin build src -out:tumble
