@@ -1,0 +1,17 @@
+#!/bin/sh
+set -eu
+
+command -v odin >/dev/null 2>&1 || {
+    printf '%s\n' 'Odin must be on PATH to build Tumble before committing.' >&2
+    exit 1
+}
+
+build_dir=$(mktemp -d)
+trap 'rm -rf "$build_dir"' EXIT
+trap 'exit 1' HUP INT TERM
+
+# Build the index rather than including unstaged source changes in the binary.
+git checkout-index --all --prefix="$build_dir/"
+odin build "$build_dir/src" -out:"$build_dir/tumble"
+mv "$build_dir/tumble" tumble
+git add -- tumble

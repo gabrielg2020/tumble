@@ -1,6 +1,5 @@
 package physics
 
-import "core:fmt"
 Particle :: struct {
 	position:     [2]f32, // 0: x, 1: y
 	radius:       f32,
