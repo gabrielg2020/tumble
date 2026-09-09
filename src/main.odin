@@ -1,12 +1,15 @@
 package main
 
+import "./control"
 import "./physics"
 import "./render"
 import rl "vendor:raylib"
 
 main :: proc() {
-	particle: physics.Particle = physics.CreateParticle(400, 300, 10, 1, 100, physics.World.gravity)
-  trail: render.Trail
+	launcher := control.Launcher{launch_scale = 3}
+
+	particles: [dynamic]ParticleInstance
+	defer delete(particles)
 
 	rl.InitWindow(i32(physics.World.dimentions[0]), i32(physics.World.dimentions[1]), "tumble")
 	defer rl.CloseWindow()
@@ -14,13 +17,22 @@ main :: proc() {
 	rl.SetTargetFPS(144)
 
 	for !rl.WindowShouldClose() {
+		UpdateControls(&launcher, &particles)
+
 		rl.BeginDrawing()
 		defer rl.EndDrawing()
 		rl.ClearBackground(rl.BLACK)
 
-		render.Step(&particle, &trail)
+		for &instance in particles {
+			render.Step(&instance.particle, &instance.trail)
+		}
+
+    if launcher.aiming {
+      render.DrawPreview(control.PreviewParticle(&launcher))
+    }
+
 		rl.DrawFPS(10, 10)
 
-    free_all(context.temp_allocator) // reclaim the memory allcoated to stats page
+		free_all(context.temp_allocator) // reclaim the memory allcoated to stats page
 	}
 }
