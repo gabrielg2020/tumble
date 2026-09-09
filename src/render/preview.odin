@@ -3,7 +3,7 @@ package render
 import "../physics"
 import rl "vendor:raylib"
 
-DrawPreview :: proc(particle: physics.Particle, world: physics.WorldConfig) {
+draw_preview :: proc(particle: physics.Particle, world: physics.WorldConfig) {
 	predicted := particle
 
 	steps_per_dot :: 12
@@ -11,7 +11,7 @@ DrawPreview :: proc(particle: physics.Particle, world: physics.WorldConfig) {
 
 	for _ in 0 ..< dot_count {
 		for _ in 0 ..< steps_per_dot {
-			physics.IntegrateParticle(&predicted, world, physics.FixedDT)
+			physics.integrate_particle(&predicted, world, physics.FIXED_DT)
 
 			if predicted.position.x - predicted.radius <= 0 ||
 			   predicted.position.x + predicted.radius >= world.dimensions[0] ||
@@ -21,6 +21,6 @@ DrawPreview :: proc(particle: physics.Particle, world: physics.WorldConfig) {
 			}
 		}
 
-		rl.DrawCircleV(WorldToScreen(predicted.position), 3, rl.WHITE)
+		rl.DrawCircleV(world_to_screen(predicted.position), 3, rl.WHITE)
 	}
 }

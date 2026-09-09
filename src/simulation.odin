@@ -7,28 +7,29 @@ SimulationClock :: struct {
 	accumulator: f64,
 }
 
-AdvanceSimulation :: proc(
+advance_simulation :: proc(
 	clock: ^SimulationClock,
 	particles: []ParticleInstance,
 	world: physics.WorldConfig,
 	frame_dt: f32,
 ) {
 	max_steps_per_frame :: 16
-	fixed_dt := f64(physics.FixedDT)
+	fixed_dt := f64(physics.FIXED_DT)
 	max_frame_dt := fixed_dt * f64(max_steps_per_frame)
 
+	// Discard excess wall-clock time to bound catch-up work after a slow frame.
 	clock.accumulator += min(f64(frame_dt), max_frame_dt)
 
 	for clock.accumulator >= fixed_dt {
-		UpdateSimulation(particles, world, physics.FixedDT)
+		update_simulation(particles, world, physics.FIXED_DT)
 		clock.accumulator -= fixed_dt
 	}
 }
 
-UpdateSimulation :: proc(particles: []ParticleInstance, world: physics.WorldConfig, dt: f32) {
+update_simulation :: proc(particles: []ParticleInstance, world: physics.WorldConfig, dt: f32) {
 	for &instance in particles {
-		physics.IntegrateParticle(&instance.particle, world, dt)
-		physics.CheckParticleCollisions(&instance.particle, world)
-		render.RecordTrail(&instance.trail, instance.particle.position)
+		physics.integrate_particle(&instance.particle, world, dt)
+		physics.check_particle_collisions(&instance.particle, world)
+		render.record_trail(&instance.trail, instance.particle.position)
 	}
 }

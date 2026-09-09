@@ -2,8 +2,7 @@ package render
 
 import "../physics"
 
-Draw :: proc(particle: ^physics.Particle, trail: ^Trail) {
-  drawTrail(trail, particle.radius)
-  RenderParticle(particle)
+draw :: proc(particle: ^physics.Particle, trail: ^Trail) {
+	draw_trail(trail, particle.radius)
+	draw_particle(particle)
 }
-
