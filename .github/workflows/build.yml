@@ -11,12 +11,16 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - uses: laytan/setup-odin@8536d8fa450ec6f1bd9ddc84bbaaf16296c0051d # v2
+      - uses: actions/checkout@v7
+      - uses: laytan/setup-odin@v2.12.2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release: dev-2026-06
       - name: Install raylib build dependencies
-        run: sudo apt-get update && sudo apt-get install -y libgl1-mesa-dev libx11-dev
+        run: |
+          # Chrome is unrelated to this build and its package index can be inconsistent.
+          sudo rm -f /etc/apt/sources.list.d/google-chrome.list
+          sudo apt-get update
+          sudo apt-get install -y libgl1-mesa-dev libx11-dev
       - name: Build Tumble
         run: odin build src -out:tumble
