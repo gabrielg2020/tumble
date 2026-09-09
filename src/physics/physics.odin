@@ -12,32 +12,20 @@ CalculatePosition :: proc(velocity: [2]f32, dt: f32) -> [2]f32 {
 
 @(private)
 IsCollidingWithTopWall :: proc(y: f32) -> bool {
-	if y <= 0 {
-		return true
-	}
-	return false
+	return y <= 0
 }
 
 @(private)
-IsCollidingWithBottomWall :: proc(y: f32) -> bool {
-	if y >= World.dimensions[1] {
-		return true
-	}
-	return false
+IsCollidingWithBottomWall :: proc(y: f32, height: f32) -> bool {
+  return y >= height
 }
 
 @(private)
-IsCollidingWithRightWall :: proc(x: f32) -> bool {
-	if x >= World.dimensions[0] {
-		return true
-	}
-	return false
+IsCollidingWithRightWall :: proc(x: f32, width: f32) -> bool {
+	return x >= width
 }
 
 @(private)
 IsCollidingWithLeftWall :: proc(x: f32) -> bool {
-	if x <= 0 {
-		return true
-	}
-	return false
+	return x <= 0
 }

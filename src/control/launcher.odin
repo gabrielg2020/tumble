@@ -31,7 +31,7 @@ PreviewParticle :: proc(launcher: ^Launcher, position: [2]f32) -> physics.Partic
 		0.1,
 		1,
 		0,
-		physics.World.gravity,
+		0,
 	)
 
 	particle.velocity = {
