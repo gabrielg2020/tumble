@@ -1,0 +1,30 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: laytan/setup-odin@v2.12.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release: dev-2026-06
+      - name: Install raylib build dependencies
+        run: |
+          # Ignore unrelated third-party repositories installed on the runner.
+          test -s /etc/apt/sources.list.d/ubuntu.sources
+          apt_options=(
+            -o Dir::Etc::sourcelist=/etc/apt/sources.list.d/ubuntu.sources
+            -o Dir::Etc::sourceparts=-
+          )
+          sudo apt-get "${apt_options[@]}" update
+          sudo apt-get "${apt_options[@]}" install -y libgl1-mesa-dev libx11-dev
+      - name: Build Tumble
+        run: odin build src -out:tumble

@@ -7,7 +7,8 @@ import rl "vendor:raylib"
 Step :: proc(particle: ^physics.Particle, trail: ^Trail) {
   trailPush(trail, particle.position)
   drawTrail(trail, particle.radius)
-	renderParticle(particle)
+	RenderParticle(particle)
+  DrawStats(particle)
 
 	dt: f32 = rl.GetFrameTime()
 	physics.CalculateParticleVelocity(particle, dt)

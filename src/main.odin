@@ -20,5 +20,7 @@ main :: proc() {
 
 		render.Step(&particle, &trail)
 		rl.DrawFPS(10, 10)
+
+    free_all(context.temp_allocator) // reclaim the memory allcoated to stats page
 	}
 }
