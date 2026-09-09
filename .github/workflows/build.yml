@@ -18,9 +18,13 @@ jobs:
           release: dev-2026-06
       - name: Install raylib build dependencies
         run: |
-          # Chrome is unrelated to this build and its package index can be inconsistent.
-          sudo rm -f /etc/apt/sources.list.d/google-chrome.list
-          sudo apt-get update
-          sudo apt-get install -y libgl1-mesa-dev libx11-dev
+          # Ignore unrelated third-party repositories installed on the runner.
+          test -s /etc/apt/sources.list.d/ubuntu.sources
+          apt_options=(
+            -o Dir::Etc::sourcelist=/etc/apt/sources.list.d/ubuntu.sources
+            -o Dir::Etc::sourceparts=-
+          )
+          sudo apt-get "${apt_options[@]}" update
+          sudo apt-get "${apt_options[@]}" install -y libgl1-mesa-dev libx11-dev
       - name: Build Tumble
         run: odin build src -out:tumble
