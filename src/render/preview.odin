@@ -6,13 +6,12 @@ import rl "vendor:raylib"
 DrawPreview :: proc(particle: physics.Particle) {
 	predicted := particle
 
-	step: f32 = 1.0 / 120.0
-	steps_per_dot :: 100
+  steps_per_dot :: 100
 	dot_count :: 3
 
 	for _ in 0 ..< dot_count {
 		for _ in 0 ..< steps_per_dot {
-      physics.IntergrateParticle(&predicted, step)
+      physics.IntergrateParticle(&predicted, physics.FixedDT)
 
 			if predicted.position.x - predicted.radius <= 0 ||
 			   predicted.position.x + predicted.radius >= physics.World.dimentions[0] ||

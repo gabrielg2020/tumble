@@ -6,6 +6,7 @@ import "./render"
 import rl "vendor:raylib"
 
 main :: proc() {
+  clock: SimulationClock
 	launcher := control.Launcher{launch_scale = 3}
 
 	particles: [dynamic]ParticleInstance
@@ -19,7 +20,7 @@ main :: proc() {
 	for !rl.WindowShouldClose() {
 		UpdateControls(&launcher, &particles)
 
-    UpdateSimulation(particles[:], rl.GetFrameTime())
+    AdvanceSimulation(&clock, particles[:], rl.GetFrameTime())
 
 		rl.BeginDrawing()
 		defer rl.EndDrawing()

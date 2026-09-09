@@ -8,6 +8,8 @@ Particle :: struct {
 	acceleration: [2]f32, // 0 ax, 1: ay
 }
 
+FixedDT :: f32(1.0 / 120.0)
+
 CreateParticle :: proc(x, y, radius, mass, ax, ay: f32) -> Particle {
 	return Particle{{x, y}, radius, mass, {0, 0}, {ax, ay}}
 }

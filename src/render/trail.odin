@@ -10,8 +10,7 @@ Trail :: struct {
 	count:  int,
 }
 
-@(private)
-trailPush :: proc(trail: ^Trail, p: [2]f32) {
+RecordTrail :: proc(trail: ^Trail, p: [2]f32) {
 	trail.points[trail.head] = p
 	trail.head = (trail.head + 1) % maxTrailLength
 	if trail.count < maxTrailLength {
