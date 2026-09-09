@@ -8,7 +8,8 @@ Step :: proc(particle: ^physics.Particle, trail: ^Trail) {
   trailPush(trail, particle.position)
   drawTrail(trail, particle.radius)
 	RenderParticle(particle)
-  DrawStats(particle)
+  // TODO: support multiple particles
+  // DrawStats(particle)
 
 	dt: f32 = rl.GetFrameTime()
 	physics.CalculateParticleVelocity(particle, dt)
